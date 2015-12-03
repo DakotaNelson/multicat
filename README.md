@@ -25,7 +25,7 @@ Where `other_stuff` is determined by the message type. Note that colons `:` are 
 
 | For `message_type` | `other_stuff` is in the format... |
 | ------------------ | --------------------------------- |
-| 'message'`         | `message`                         |
+| `'message'`        | `message`                         |
 | `job`              | `jobId:jobName:cmdString`         |
 | `checkin`          | (none)                            |
 

