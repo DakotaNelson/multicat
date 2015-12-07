@@ -35,7 +35,7 @@ class Comms(object):
         self.feed = feed
 
     def receive(self):
-        """ Retrieve messages from the comms feed and return themall """
+        """ Retrieve messages from the comms feed and return them all """
         msgs = self.feed.receive()
         return msgs
 

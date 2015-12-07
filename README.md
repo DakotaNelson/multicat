@@ -25,15 +25,16 @@ Where `other_stuff` is determined by the message type. Note that colons `:` are 
 
 | For `message_type` | `other_stuff` is in the format... |
 | ------------------ | --------------------------------- |
-| `'message'`        | `message`                         |
-| `job`              | `jobId:jobName:cmdString`         |
+| `message`          | `message`                         |
 | `checkin`          | (none)                            |
+| `job`              | `jobId:jobType:cmdString`         |
 
 
 ### Message Types
 
 #### Message
 
+Implant --> Console
 Sends a simple message to the C&C console for display.
 
 ###### Fields:
@@ -42,6 +43,7 @@ Sends a simple message to the C&C console for display.
 
 #### Checkin
 
+Implant --> Console
 Informs the C&C console that a new implant instance has come online.
 
 ###### Fields:
@@ -50,11 +52,12 @@ Informs the C&C console that a new implant instance has come online.
 
 #### Job
 
+Console --> Implant
 Instructs the implant to carry out a job.
 
 ###### Fields:
   `jobId` - a unique ID string for the job itself, tracked by the implant to avoid repeating jobs
-  `jobName` - the name of the job to carry out. The implant searches for a function with this name in its `Jobs` module, then executes it (if found).
+  `jobType` - the name of the job to carry out. The implant searches for a function with this name in its `Jobs` module, then executes it (if found).
   `cmdString` - a string passed to the job code itself, used to pass in parameters.
 
 ###### Example:
